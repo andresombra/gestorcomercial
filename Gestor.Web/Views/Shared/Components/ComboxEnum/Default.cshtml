@@ -1,0 +1,5 @@
+﻿@model Gestor.Web.ViewModels.EnumViewModel
+
+<label class="control-label">@Model.NomeLabel</label>
+<select id="@Model.Campo" name="@Model.Campo" asp-items="@Model.ListaEnum" class="form-control"></select>
+<span data-valmsg-for="@Model.Campo" data-valmsg-replace="true" class="text-danger"></span>

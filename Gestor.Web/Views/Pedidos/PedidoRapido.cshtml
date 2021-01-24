@@ -1,0 +1,134 @@
+﻿@model Gestor.Dominio.Entidades.Pedido
+
+<h4>Pedido</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="PedidoRapido">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="col-xs-12 col-md-12">
+                    <table class="table table-sm table-condensed">
+                        <thead>
+                            <tr><th>Pedido</th><th>&nbsp;</th><th>Quantidade</th><th>Observacao</th></tr>
+                        </thead>
+                        @foreach (var itm in Model.ListaProduto)
+                        {
+                            <tr>
+                                <td>@itm.NomeProduto</td>
+                                <td>
+                                    <div id="btn_@itm.Id" onclick="Adicionar('@itm.Id')" class="btn btn-sm btn-success">&nbsp;+&nbsp;Adicionar</div>
+                                    <div id="btn_rmv_@itm.Id" onclick="Remover('@itm.Id')" class="btn btn-sm btn-danger">&nbsp;-&nbsp;</div>
+                                </td>
+                                <td id="qtd_@itm.Id" class="center"></td>
+                                <td id="obs_@itm.Id"><input type="text" class="form-control form-control-sm"/></td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+
+                @*<div style="float: left">
+                    <table id="tblpedido" class="table table-condensed table-sm">
+                        <thead>
+                            <tr><th>Pedido</th><th>Quantidade</th></tr>
+                        </thead>
+                    </table>
+                </div>*@
+            </div>
+
+            @*<div class="form-group">
+                    <label asp-for="UsuarioId" class="control-label"></label>
+                    <input asp-for="UsuarioId" class="form-control" />
+                    <span asp-validation-for="UsuarioId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DataInclusao" class="control-label"></label>
+                    <input asp-for="DataInclusao" class="form-control" />
+                    <span asp-validation-for="DataInclusao" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TipoPedido" class="control-label"></label>
+                    <select asp-for="TipoPedido" class="form-control"></select>
+                    <span asp-validation-for="TipoPedido" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Situacao" class="control-label"></label>
+                    <select asp-for="Situacao" class="form-control"></select>
+                    <span asp-validation-for="Situacao" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PessoaId" class="control-label"></label>
+                    <select asp-for="PessoaId" class ="form-control" asp-items="ViewBag.PessoaId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="VendedorId" class="control-label"></label>
+                    <select asp-for="VendedorId" class ="form-control" asp-items="ViewBag.VendedorId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Endereco" class="control-label"></label>
+                    <input asp-for="Endereco" class="form-control" />
+                    <span asp-validation-for="Endereco" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PontoReferencia" class="control-label"></label>
+                    <input asp-for="PontoReferencia" class="form-control" />
+                    <span asp-validation-for="PontoReferencia" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Telefone" class="control-label"></label>
+                    <input asp-for="Telefone" class="form-control" />
+                    <span asp-validation-for="Telefone" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Celular" class="control-label"></label>
+                    <input asp-for="Celular" class="form-control" />
+                    <span asp-validation-for="Celular" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Observacao" class="control-label"></label>
+                    <input asp-for="Observacao" class="form-control" />
+                    <span asp-validation-for="Observacao" class="text-danger"></span>
+                </div>*@
+            <div class="form-group">
+                <input type="submit" value="Confirmar Pedido" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Voltar</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        function Adicionar(itm) {
+            var qtd = $("#qtd_" + itm);
+            var quant = qtd.val();
+            console.log('quant:' + quant);
+            if (quant == "") {
+                qtd.val(1);
+                console.log('vazio');
+                qtd.html(1);
+            } else {
+                console.log('somar');
+                qtd.val(Number(quant) + 1);
+                qtd.html(Number(quant) + 1);
+            }
+            console.log(qtd);
+            console.log(qtd.val());
+            
+        }
+        function Remover(itm) {
+            var qtd = $("#qtd_" + itm);
+            qtd.val(0);
+            qtd.html(0);
+        }
+    </script>
+}

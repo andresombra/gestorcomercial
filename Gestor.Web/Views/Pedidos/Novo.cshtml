@@ -1,0 +1,158 @@
+﻿@model Gestor.Dominio.Entidades.Pedido
+
+@{
+    ViewData["Title"] = "Novo Pedido";
+}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 widget-container-col ui-sortable">
+        <div class="page-header">
+            <h3>
+                <i class="fa fa-plus"></i>&nbsp;Cadastrar Novo Pedido
+            </h3>
+        </div>
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Novo">
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group col-sm-2 col-md-2">
+                    <label asp-for="TipoPedido" class="control-label"></label>
+                    <select asp-for="TipoPedido" class="form-control" asp-items="@Html.GetEnumSelectList<Gestor.Dominio.Enums.ETipoPedido>()"></select>
+                    <span asp-validation-for="TipoPedido" class="text-danger"></span>
+                </div>
+                <div class="form-group col-sm-3 col-md-3">
+                    <label asp-for="PessoaId" class="control-label"></label>
+                    <select asp-for="PessoaId" class="form-control" asp-items="ViewBag.Clientes"></select>
+                </div>
+                <div class="form-group col-sm-3 col-md-3">
+                    <label asp-for="VendedorId" class="control-label"></label>
+                    <select asp-for="VendedorId" class="form-control" asp-items="ViewBag.Vendedores"></select>
+                </div>
+                <div class="form-group col-sm-4 col-md-4">
+                    <label asp-for="Endereco" class="control-label"></label>
+                    <input asp-for="Endereco" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-4 col-md-4">
+                    <label asp-for="PontoReferencia" class="control-label"></label>
+                    <input asp-for="PontoReferencia" class="form-control" />
+                </div>
+                <div class="form-group col-sm-2 col-md-2">
+                    <label asp-for="Telefone" class="control-label"></label>
+                    <input asp-for="Telefone" class="form-control" />
+                </div>
+                <div class="form-group col-sm-2 col-md-2">
+                    <label asp-for="Celular" class="control-label"></label>
+                    <input asp-for="Celular" class="form-control" />
+                </div>
+                <div class="form-group col-sm-2 col-md-2">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                </div>
+                <div class="form-group col-sm-2 col-md-2">
+                    <label asp-for="Observacao" class="control-label"></label>
+                    <input asp-for="Observacao" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-8 col-sm-offset-3 align-center">
+                    <button class="btn btn-info" id="btnSalvar" type="submit">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        Salvar
+                    </button>
+                    <div id="btn-add-item" class="btn btn-dark">Adicionar Item</div>
+                    
+                    @*<a class="btn btn-warning" href="javascript:history.back()">
+                        <i class="ace-icon fa fa-arrow-left"></i>
+                        Voltar
+                    </a>*@
+                </div>
+            </div>
+            @*<partial name="~/Views/Pedidos/_AdicionarItem.cshtml" for="Pedido_Item"/>*@
+            
+
+        </form>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ITEM</th><th>VALOR UNIT.</th><th>QTDE</th><th>TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody id="tblitems">
+
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade modal-xl" id="modal-add-item" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                    <i class="fa fa-shopping-cart"></i>&nbsp;Adicionar Item
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="msg-erro" class="alert alert-danger" style="display:none" role="alert"></div>
+                <div id="msg-ok" class="alert alert-success" style="display:none" role="alert"></div>
+
+                <div id="form-item"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                @*<button type="button" class="btn btn-primary">Incluir</button>*@
+                <button id="btnsalvar-pedidoitem" type="button" class="btn btn-primary">
+                    <span id="spn-aguarde" style="display:none" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Incluir
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+
+        var cxmodal = $("#modal-add-item");
+        $("#btn-add-item").click(function() {
+            cxmodal.modal("show");
+        });
+        cxmodal.on('show.bs.modal', function(e) {
+            CarregarFormItem();
+        });
+        cxmodal.on('hidden.bs.modal', function(e) {
+            console.log('fechou');
+        });
+
+       function CarregarFormItem() {
+        $.ajax({
+            type:'GET',
+            url: '@Url.Content("~/Pedidos/AdicionarItem")',
+            dataType: 'html',
+            async: true,
+            data: { pedidoId: '@Model.Id' },
+            success: function (data) {
+                console.log('sucesso');
+                $('#form-item').html(data);
+            }
+        }).done(function (data) {
+            console.log('feito');
+        });
+    }
+</script>
+}

@@ -1,0 +1,50 @@
+﻿@model List<Gestor.Dominio.Entidades.Usuario>
+@{
+    ViewData["Title"] = "Lista Usuarios";
+    var exclusao_vc = new ExclusaoViewModel("Usuarios");
+}
+<link rel="stylesheet" type="text/css" href="~/lib/datatables/css/jquery.dataTables.min.css" />
+
+<div class="card">
+    <div class="card-header">
+        <h4>
+            <i class="fas fa-user-friends"></i>&nbsp;LISTA USUARIOS&nbsp;|&nbsp;<a asp-action="Create" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i>&nbsp;Novo</a>
+        </h4>
+    </div>
+    <div class="card-body">
+        <table id="tblusuario" class="table table-striped table-bordered table-responsive-sm">
+            <thead>
+                <tr>
+                    <th>Cod.</th>
+                    <th>Nome Usuario</th>
+                    <th>Login</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model == null)@Html.Raw("<h3>Sem registros para listar.</h3>")
+                else
+                    foreach (var c in Model)
+                    {
+                        <tr>
+                            <td>@c.Id</td>
+                            <td>@c.NomeUsuario</td>
+                            <td>@c.Login</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@c.Id"><i class="far fa-edit"></i></a>&nbsp;
+                                <a class="text-danger" asp-action="Excluir" asp-controller="Exclusao" asp-route-exc="@exclusao_vc.Json(c.Id,c.NomeUsuario)"><i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                    }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript" src="~/js/funcoes.js"></script>
+    <script src="~/lib/datatables/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script>
+        paginacao("#tblusuario");
+    </script>
+}

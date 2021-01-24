@@ -1,0 +1,20 @@
+﻿@model Gestor.Web.Models.ExclusaoViewModel
+
+<div class="card">
+    <div class="card-header"><h3>@Model.Titulo !</h3></div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <form method="post" asp-action="Excluir" asp-controller="@Model.Controller" asp-route-id="@Model.Id">
+                    @Html.HiddenFor(m=> m.Controller)
+                    <div class="form-group">
+                        @Model.MensagemPadrao&nbsp;<strong style="font-size:20px" class="text-danger">@Model.Mensagem</strong>&nbsp;?
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

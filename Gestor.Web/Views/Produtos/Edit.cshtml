@@ -1,0 +1,96 @@
+﻿@using System.Globalization
+@model Gestor.Dominio.Entidades.Produto
+
+@{
+    ViewData["Title"] = "Edit";
+}
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 widget-container-col ui-sortable">
+            <div class="page-header">
+                <h3>
+                    <i class="fa fa-pencil-alt"></i>&nbsp;Editar Produto
+                </h3>
+            </div>
+        </div>
+    </div>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="form-group col-md-5">
+                    <label asp-for="NomeProduto" class="control-label"></label>
+                    <input asp-for="NomeProduto" class="form-control" required />
+                    <span asp-validation-for="NomeProduto" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-2">
+                    <label asp-for="UnidadeId" class="control-label"></label>
+                    <select asp-for="UnidadeId" class="form-control" asp-items="ViewBag.UnidadeId"></select>
+                    <span asp-validation-for="UnidadeId" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="CategoriaId" class="control-label"></label>
+                    <select asp-for="CategoriaId" class="form-control" asp-items="ViewBag.CategoriaId"></select>
+                    <span asp-validation-for="CategoriaId" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-2">
+                    <label asp-for="CodigoSecundario" class="control-label"></label>
+                    <input asp-for="CodigoSecundario" class="form-control" />
+                    <span asp-validation-for="CodigoSecundario" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label asp-for="FornecedorId" class="control-label"></label>
+                    <select asp-for="FornecedorId" class="form-control" asp-items="ViewBag.FornecedorId"></select>
+                    <span asp-validation-for="FornecedorId" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-2">
+                    <label asp-for="ValorVenda" class="control-label"></label>
+                    <input asp-for="ValorVenda" class="form-control" />
+                    <span asp-validation-for="ValorVenda" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-2">
+                    <label asp-for="ValorCusto" class="control-label"></label>
+                    <input asp-for="ValorCusto" class="form-control" />
+                    <span asp-validation-for="ValorCusto" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-2">
+                    <label asp-for="QtdeEstoque" class="control-label"></label>
+                    <input asp-for="QtdeEstoque" class="form-control" />
+                    <span asp-validation-for="QtdeEstoque" class="text-danger"></span>
+                </div>
+            </div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="UsuarioId" />
+            <input type="hidden" asp-for="DataInclusao" />
+            <div class="row">
+                <div class="col-xs-12 col-sm-8 col-sm-offset-3 align-center">
+                    <button class="btn btn-info" id="btnSalvar" type="submit">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        Salvar
+                    </button>
+                    &nbsp;
+                    <a class="btn" href="javascript:history.back()" style="color:silver">
+                        <i class="ace-icon fa fa-arrow-left"></i>
+                        Voltar
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+
+    <script>
+        $().ready(function () {
+            $("#ValorVenda").maskMoney({ thousands: '.', decimal: ',', allowZero: true });
+            $("#ValorCusto").maskMoney({ thousands: '.', decimal: ',', allowZero: true });
+            $("#QtdeEstoque").maskMoney({ thousands: '.', decimal: ',', allowZero: true });
+        });
+    </script>
+}

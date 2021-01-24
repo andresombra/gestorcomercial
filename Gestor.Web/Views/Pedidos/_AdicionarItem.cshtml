@@ -1,0 +1,74 @@
+﻿@model Gestor.Dominio.Entidades.PedidoItem
+@{ Layout = null;}
+
+<form id="frm-pedidoitem">
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="form-group col-md-12">
+            <label class="control-label">Selecionar Item</label>
+            <select asp-for="ProdutoId" class="form-control" asp-items="ViewBag.Produtos"></select>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Valor" class="control-label">Valor</label>
+            <input asp-for="Valor" class="form-control" />
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Qtde" class="control-label">Qtde.</label>
+            <input asp-for="Qtde" class="form-control" />
+        </div>
+    </div>
+    <input hidden asp-for="PedidoId" />
+</form>
+<script>
+     $("#Valor").maskMoney({ thousands: '.', decimal: ',', allowZero: true });
+     $("#Qtde").maskMoney({ thousands: '.', decimal: ',', allowZero: true });
+
+    $("#ProdutoId").change(function () {
+        console.log($("#ProdutoId").val());
+     });
+
+     $("#btnsalvar-pedidoitem").click(function () {
+            console.log("clicou salvar");
+            var valdata = $("#frm-pedidoitem").serialize();
+            console.log(valdata);
+         $.ajax({
+             url: "@Url.Content("~/Pedidos/AdicionarItem")",
+             type: "POST",
+             dataType: 'json',
+             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+             data: valdata,
+             beforeSend: function () {
+                 $("#spn-aguarde").show();
+                 $("#msg-erro").html("").hide();
+                 $("#msg-ok").html("").hide();
+             },
+             success: function (data) {
+                 setInterval(function () { $("#msg-erro").hide(); $("#msg-ok").hide(); }, 5000);
+                 //debugger;
+                 var ret = JSON.parse(data);
+                 $("#tblitems").append("<tr><td>" + ret.Produto.NomeProduto + "</td><td>" + ret.Valor + "</td><td>" + ret.Qtde + "</td><td>" + ret.Valor * ret.Qtde + "</td></tr>");
+
+                 //for (var i = 0; i < ret.length; i++) {
+                 //    $("#tblitems").append("<tr><td>" + ret[i].Produto.NomeProduto + "</td><td>" + ret[i].Valor + "</td><td>" + ret[i].Qtde + "</td><td>" + ret[i].Valor * ret[i].Qtde+"</td></tr>");
+                 //}
+
+                 //ret.forEach(function(item){
+                 //    $("#tblitem").html("<td>Produto</td><td>" + item.Valor + "</td><td>" + item.Qtde + "</td><td>total</td>");
+                 //});
+                 //   console.log(ret.Codigo);
+                 //   console.log(ret.Mensagem);
+                 //   console.log(ret.MensagemBasica);
+
+                 if (ret.Codigo == -1) {
+                    $("#msg-erro").html(ret.Mensagem).show();
+                 }
+                 else {
+                    $("#msg-ok").html(ret.Mensagem).show;
+                 }
+                }
+            }).done(function (data) {
+                $("#spn-aguarde").hide();
+                console.log('feito');
+            });
+        });
+</script>
