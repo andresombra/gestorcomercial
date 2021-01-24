@@ -17,6 +17,7 @@ namespace Gestor.Web.Controllers
 {
     public class PedidosController : Controller
     {
+        //Usando os servicos
         private readonly IPedidoService _pedidoService;
         private readonly IPessoaService _pessoaService;
         private readonly IPedidoItemService _pedidoItemService;
